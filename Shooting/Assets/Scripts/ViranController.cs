@@ -4,13 +4,22 @@ using UnityEngine;
 
 public class ViranController : MonoBehaviour
 {
-    [SerializeField] float speed;
+    float speed;
+    int shots;
+    float angle;
+    float coolTime;
+    float launchAngle;
     [SerializeField] GameObject Bullet;
     float bulletTime = 0;
+    [SerializeField] GameObject particleObject;
+    [SerializeField] StatuaData status;
 
     void Start()
     {
-        
+        speed = status.Speed;
+        shots = status.Shots;
+        angle = status.Angle;
+        coolTime = status.CoolTime;
     }
 
     void Update()
@@ -18,13 +27,17 @@ public class ViranController : MonoBehaviour
         this.transform.position += new Vector3(0, -speed * Time.deltaTime, 0);
 
         bulletTime += Time.deltaTime;
-        if(bulletTime >= 0.5f) {
+        if(bulletTime >= coolTime) {
             Transform ViranPos = this.GetComponent<Transform>();
             Vector3 bulletPos = ViranPos.position;
 
-            Instantiate(Bullet, bulletPos, Quaternion.Euler(0, 0, 0));
-            Instantiate(Bullet, bulletPos, Quaternion.Euler(0, 0, 60));
-            Instantiate(Bullet, bulletPos, Quaternion.Euler(0, 0, -60));
+            for (int i = 0; i < shots; i++) {
+                if(shots % 2 == 0) {
+                    launchAngle = i * angle + angle / 2;
+                }
+                else { launchAngle = i * angle;}
+                Instantiate(Bullet, bulletPos, Quaternion.Euler(0, 0, launchAngle));
+            }
             bulletTime = 0f;
         }
     }
@@ -33,6 +46,7 @@ public class ViranController : MonoBehaviour
     {
         if(collision.gameObject.tag == "Bullet")
         {
+            Instantiate(particleObject, this.transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

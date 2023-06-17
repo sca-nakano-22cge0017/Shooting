@@ -19,7 +19,7 @@ public class BulletMove : MonoBehaviour
     {
         transform.position += vec;
 
-        if(this.transform.position.y >= 5)
+        if(this.transform.position.y >= 4.5)
         {
             Destroy(gameObject);
         }

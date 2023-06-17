@@ -1105,9 +1105,17 @@ MonoBehaviour:
   maxRockPos: 5
   minRockPos: -5
   Items: {fileID: 4746526427992102983, guid: 3264354d8c1fe954caba798389d40672, type: 3}
-  Viran: {fileID: 456651354743137889, guid: b8e4997bb5294e1429a8e1fbcedd07d2, type: 3}
+  Viran:
+  - {fileID: 456651354743137889, guid: b8e4997bb5294e1429a8e1fbcedd07d2, type: 3}
+  - {fileID: 4051330855445063798, guid: cf114f00062d21744a95bf9c123a7b53, type: 3}
+  - {fileID: 5287501900447387545, guid: 697f155329a705f4cb2d2f3a56970a88, type: 3}
+  - {fileID: 4621326836035381148, guid: 531e4db994b019f49862471a054a4d59, type: 3}
   maxViranPos: 3.5
   minViranPos: -3.5
+  threeDirection: 0
+  twoDirection: 0
+  highSpeed: 10
+  eightDirection: 90
   Bullet: {fileID: 8436907775453181603, guid: ff0e305733a00bb4e92c092ba155162a, type: 3}
   HP:
   - {fileID: 1906896841}

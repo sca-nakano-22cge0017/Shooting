@@ -23,10 +23,13 @@ public class GameManager : MonoBehaviour
     float itemPos;
 
     //敵
-    [SerializeField] GameObject Viran;
+    [SerializeField] GameObject[] Viran;
     [SerializeField, Header("ViranPosition")] float maxViranPos, minViranPos;
     bool viranCreate;
     float viranPos;
+    int viranNum;
+    int probability;
+    [SerializeField, Header("ViranOccurrenceProbability")] int threeDirection, twoDirection, highSpeed, eightDirection;
 
     //弾
     [SerializeField] GameObject Bullet;
@@ -113,13 +116,20 @@ public class GameManager : MonoBehaviour
         if (viranCreate)
         {
             viranPos = Random.Range(minViranPos, maxViranPos);
-            Instantiate(Viran, new Vector3(viranPos, 8, 0), Quaternion.identity);
+            probability = Random.Range(1, 100);
+
+            if(probability <= threeDirection) { viranNum = 0; }
+            else if (probability > threeDirection && probability <= twoDirection) { viranNum = 1; }
+            else if(probability > twoDirection && probability <= highSpeed) { viranNum = 2; } 
+            else if(probability > highSpeed && probability <= eightDirection) { viranNum = 3; }
+
+            Instantiate(Viran[viranNum], new Vector3(viranPos, 8, 0), Quaternion.identity);
             viranCreate = false;
             StartCoroutine("ViranCoolTime");
         }
 
         //アイテム生成
-        if(itemCreate) {
+        if(itemCreate && hp < 3) {
             itemPos = Random.Range(-3, 3);
             Instantiate(Items, new Vector3(itemPos, 8, 0), Quaternion.identity);
             itemCreate = false;
@@ -138,20 +148,20 @@ public class GameManager : MonoBehaviour
         }
 
         //HP処理
-        if(minusHp) {
-            HP[hp - 1].GetComponent<Image>().color = new Color(0, 0, 0, 255);
+        if(minusHp && hp > 0) {
             hp--;
+            HP[hp].GetComponent<Image>().color = new Color(0, 0, 0, 255);
             minusHp = false;
         }
 
-        if(plusHp) {
-            HP[hp - 1].GetComponent<Image>().color = new Color(255, 0, 0, 255);
+        if(plusHp && hp < 3) {
             hp++;
+            HP[hp - 1].GetComponent<Image>().color = new Color(255, 0, 0, 255);
             plusHp = false;
         }
 
-        if(hp >= 3) hp = 3;
         if(hp <= 0) hp = 0;
+        if(hp >= 3) hp = 3;
 
         //ゲームオーバー判定
         if(hp <= 0)
