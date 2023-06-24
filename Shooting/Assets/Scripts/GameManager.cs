@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     float viranPos;
     int viranNum;
     int probability;
-    [SerializeField, Header("ViranOccurrenceProbability")] int threeDirection, twoDirection, highSpeed, eightDirection;
+    [SerializeField, Header("ViranOccurrenceProbability")] int threeDirection, twoDirection, highSpeed;
 
     //弾
     [SerializeField] GameObject Bullet;
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     //HP
     [SerializeField] Image[] HP;
-    int hp;
+    public static int hp;
     bool minusHp, plusHp;
 
     //カウントダウン
@@ -50,6 +50,11 @@ public class GameManager : MonoBehaviour
 
     //ゲームオーバー
     [SerializeField] Text GameOverText;
+
+    //敵撃破数
+    public static int killScore;
+    bool kill;
+    [SerializeField] Text KillScore;
  
     enum STATE { WAIT = 0, PLAY, GAMEOVER, CLEAR, };
     STATE state = 0;
@@ -57,6 +62,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        killScore = 0;
+        kill = false;
+
         state = STATE.WAIT;
         sceneChange = false;
         StartCoroutine("CountDown");
@@ -78,6 +86,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        KillScore.text = killScore + "";
+
         switch(state)
         {
             case STATE.WAIT:
@@ -121,7 +131,6 @@ public class GameManager : MonoBehaviour
             if(probability <= threeDirection) { viranNum = 0; }
             else if (probability > threeDirection && probability <= twoDirection) { viranNum = 1; }
             else if(probability > twoDirection && probability <= highSpeed) { viranNum = 2; } 
-            else if(probability > highSpeed && probability <= eightDirection) { viranNum = 3; }
 
             Instantiate(Viran[viranNum], new Vector3(viranPos, 8, 0), Quaternion.identity);
             viranCreate = false;
@@ -163,11 +172,18 @@ public class GameManager : MonoBehaviour
         if(hp <= 0) hp = 0;
         if(hp >= 3) hp = 3;
 
+        //敵撃破数集計
+        if(kill) {
+            ++killScore;
+            kill = false;
+        }
+
         //ゲームオーバー判定
         if(hp <= 0)
         {
             state = STATE.GAMEOVER;
             playerController.GameOver();
+            StartCoroutine("GameOver");
         }
 
         //クリア判定 
@@ -208,6 +224,10 @@ public class GameManager : MonoBehaviour
         plusHp = true;
     }
 
+    public void Kill() {
+        kill = true;
+    }
+
     IEnumerator RockCoolTime()
     {
         yield return new WaitForSeconds(2);
@@ -243,5 +263,10 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene("ResultScene");
         sceneChange = false;
+    }
+
+    IEnumerator GameOver() {
+        yield return new WaitForSeconds(3);
+        SceneManager.LoadScene("TitleScene");
     }
 }

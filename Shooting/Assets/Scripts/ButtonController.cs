@@ -8,4 +8,12 @@ public class ButtonController : MonoBehaviour
     public void OnClickStart() {
         SceneManager.LoadScene("MainScene");
     }
+
+    public void OnClickExit() {
+        Application.Quit();
+    }
+
+    public void OnClickTitle() {
+        SceneManager.LoadScene("TitleScene");
+    }
 }

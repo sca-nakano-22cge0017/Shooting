@@ -14,24 +14,28 @@ public class ViranController : MonoBehaviour
     [SerializeField] GameObject particleObject;
     [SerializeField] StatuaData status;
 
+    GameObject MainManager;
+
     void Start()
     {
         speed = status.Speed;
         shots = status.Shots;
         angle = status.Angle;
         coolTime = status.CoolTime;
+
+        MainManager = GameObject.Find("MainManager");
     }
 
     void Update()
     {
-        this.transform.position += new Vector3(0, -speed * Time.deltaTime, 0);
+        this.transform.localPosition += new Vector3(0, -speed * Time.deltaTime, 0);
 
         bulletTime += Time.deltaTime;
         if(bulletTime >= coolTime) {
             Transform ViranPos = this.GetComponent<Transform>();
-            Vector3 bulletPos = ViranPos.position;
+            Vector3 bulletPos = ViranPos.localPosition;
 
-            for (int i = 0; i < shots; i++) {
+            for (int i = -1; i < shots - 1; i++) {
                 if(shots % 2 == 0) {
                     launchAngle = i * angle + angle / 2;
                 }
@@ -46,7 +50,8 @@ public class ViranController : MonoBehaviour
     {
         if(collision.gameObject.tag == "Bullet")
         {
-            Instantiate(particleObject, this.transform.position, Quaternion.identity);
+            Instantiate(particleObject, this.transform.localPosition, Quaternion.identity);
+            MainManager.GetComponent<GameManager>().Kill();
             Destroy(gameObject);
         }
     }
