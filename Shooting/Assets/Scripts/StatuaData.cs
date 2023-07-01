@@ -9,9 +9,11 @@ public class StatuaData : ScriptableObject
     [SerializeField] int m_shots; //ˆê“x‚ÉŒ‚‚Â‹…‚Ì”
     [SerializeField] float m_angle; //”­Ë‚³‚ê‚é‹…‚ÌŠp“x
     [SerializeField] float m_coolTime; //Ÿ‚É”­Ë‚³‚ê‚é‚Ü‚Å‚ÌŠÔ
+    [SerializeField] float m_correction; //”­ËŠp“x•â³
 
     public float Speed { get { return m_speed;} }
     public int Shots { get { return m_shots;} }
     public float Angle { get { return m_angle;} }
     public float CoolTime { get { return m_coolTime;} }
+    public float Correction { get { return m_correction; } }
 }

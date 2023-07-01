@@ -16,3 +16,4 @@ MonoBehaviour:
   m_shots: 3
   m_angle: 60
   m_coolTime: 0.5
+  m_correction: 0

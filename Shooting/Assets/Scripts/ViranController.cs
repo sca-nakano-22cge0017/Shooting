@@ -6,7 +6,7 @@ public class ViranController : MonoBehaviour
 {
     float speed;
     int shots;
-    float angle;
+    float angle, correction;
     float coolTime;
     float launchAngle;
     [SerializeField] GameObject Bullet;
@@ -16,17 +16,18 @@ public class ViranController : MonoBehaviour
 
     GameObject MainManager;
 
-    void Start()
+    public void Start()
     {
         speed = status.Speed;
         shots = status.Shots;
         angle = status.Angle;
+        correction = status.Correction;
         coolTime = status.CoolTime;
 
         MainManager = GameObject.Find("MainManager");
     }
 
-    void Update()
+    public void Update()
     {
         this.transform.localPosition += new Vector3(0, -speed * Time.deltaTime, 0);
 
@@ -40,7 +41,7 @@ public class ViranController : MonoBehaviour
                     launchAngle = i * angle + angle / 2;
                 }
                 else { launchAngle = i * angle;}
-                Instantiate(Bullet, bulletPos, Quaternion.Euler(0, 0, launchAngle));
+                Instantiate(Bullet, bulletPos, Quaternion.Euler(0, 0, launchAngle + correction));
             }
             bulletTime = 0f;
         }

@@ -31,6 +31,12 @@ public class GameManager : MonoBehaviour
     int probability;
     [SerializeField, Header("ViranOccurrenceProbability")] int threeDirection, twoDirection, highSpeed;
 
+    //ボス
+    [SerializeField] GameObject boss;
+    [SerializeField] GameObject bossHPBar;
+    [SerializeField] Image bossHP;
+    bool isBoss, bossDamage;
+
     //弾
     [SerializeField] GameObject Bullet;
     float bulletTime;
@@ -47,6 +53,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image Goal;
     [SerializeField] float playTime = 60;
     float time;
+    bool clear;
 
     //ゲームオーバー
     [SerializeField] Text GameOverText;
@@ -64,6 +71,9 @@ public class GameManager : MonoBehaviour
     {
         killScore = 0;
         kill = false;
+        clear = false;
+        isBoss = false;
+        bossDamage = false;
 
         state = STATE.WAIT;
         sceneChange = false;
@@ -75,6 +85,9 @@ public class GameManager : MonoBehaviour
         StartCoroutine("RockCoolTime");
         StartCoroutine("ViranCoolTime");
         StartCoroutine("ItemCoolTime");
+
+        boss.SetActive(false);
+        bossHPBar.SetActive(false);
 
         Goal.enabled = false;
         GameOverText.enabled = false;
@@ -123,7 +136,7 @@ public class GameManager : MonoBehaviour
         }
 
         //敵の生成
-        if (viranCreate)
+        if (viranCreate && !isBoss)
         {
             viranPos = Random.Range(minViranPos, maxViranPos);
             probability = Random.Range(1, 100);
@@ -186,10 +199,31 @@ public class GameManager : MonoBehaviour
             StartCoroutine("GameOver");
         }
 
-        //クリア判定 
+        //ボス判定
         time += Time.deltaTime;
-        if (time >= playTime)
-        {
+        if(time >= playTime) {
+            isBoss = true;
+            BOSS();
+        }
+    }
+
+    void BOSS() {
+        boss.SetActive(true);
+        bossHPBar.SetActive(true);
+        
+        if(boss.transform.localPosition.y >= 0.5f) {
+            boss.transform.localPosition += new Vector3(0, -2.2f, 0) * Time.deltaTime;
+        }
+        if(bossHPBar.transform.localPosition.y >= 250) {
+            bossHPBar.transform.localPosition += new Vector3(0, -150, 0) * Time.deltaTime;
+        }
+        
+        if(bossDamage) {
+            bossHP.fillAmount -= 0.1f;
+            bossDamage = false;
+        }
+        if(bossHP.fillAmount <= 0) {
+            bossHPBar.SetActive(false);
             state = STATE.CLEAR;
         }
     }
@@ -214,6 +248,7 @@ public class GameManager : MonoBehaviour
     void GAMEOVER()
     {
         GameOverText.enabled = true;
+        bossHPBar.SetActive(false);
     }
 
     public void MinusHp() {
@@ -224,8 +259,16 @@ public class GameManager : MonoBehaviour
         plusHp = true;
     }
 
+    public void BossMinusHP() {
+        bossDamage = true;
+    }
+
     public void Kill() {
         kill = true;
+    }
+
+    public void Clear() {
+        clear = true;
     }
 
     IEnumerator RockCoolTime()
