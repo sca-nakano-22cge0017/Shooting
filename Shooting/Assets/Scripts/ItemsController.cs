@@ -5,6 +5,7 @@ using UnityEngine;
 public class ItemsController : MonoBehaviour
 {
     float speed = 2;
+    [SerializeField] float min;
 
     void Start()
     {
@@ -15,7 +16,7 @@ public class ItemsController : MonoBehaviour
     {
         this.transform.position -= new Vector3(0, speed * Time.deltaTime, 0);
 
-        float scale = 0.1f * Mathf.Sin(Time.time * 3f) + 0.5f;
+        float scale = 0.05f * Mathf.Sin(Time.time * 3f) + min;
         this.transform.localScale = new Vector3(scale, scale, 1);
     }
 

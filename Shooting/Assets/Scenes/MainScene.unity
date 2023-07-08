@@ -1811,7 +1811,7 @@ MonoBehaviour:
   - {fileID: 1112049393}
   countDown: {fileID: 789824308}
   Goal: {fileID: 2133248693}
-  playTime: 15
+  playTime: 60
   GameOverText: {fileID: 1562176561}
   KillScore: {fileID: 534134041}
 --- !u!4 &1969097874
