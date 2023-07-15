@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     bool isDamage, invincible;
     enum STATE { WAIT = 0, PLAY, GAMEOVER, CLEAR, };
     STATE state = 0;
-    //ParticleSystem p;　パーティクルを定義
 
     [SerializeField] GameManager gameManager;
 
@@ -104,7 +103,6 @@ public class PlayerController : MonoBehaviour
     }
 
     IEnumerator Damage() {
-        //p.Play(); パーティクル開始
         for (int i = 0; i < 3; i++) {
             invincible = true;
             GetComponent<SpriteRenderer>().color = new Color (0, 0, 0, 0.2f);

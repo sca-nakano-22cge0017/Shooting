@@ -150,7 +150,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine("ViranCoolTime");
         }
 
-        //アイテム生成
+        //回復アイテム生成
         if(itemCreate && hp < 3) {
             itemPos = Random.Range(-3, 3);
             Instantiate(Items, new Vector3(itemPos, 8, 0), Quaternion.identity);
