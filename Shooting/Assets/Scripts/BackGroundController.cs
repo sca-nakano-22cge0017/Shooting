@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 背景移動
+/// </summary>
 public class BackGroundController : MonoBehaviour
 {
 	private const float k_maxLength = 1f;
@@ -21,7 +24,7 @@ public class BackGroundController : MonoBehaviour
 
 	private void Update() {
 		if(m_material) {
-			// xとyの値が0 ～ 1でリピートするようにする
+			///xとyの値が0 ～ 1でリピートするようにする
 			var x = Mathf.Repeat(Time.time * m_offsetSpeed.x, k_maxLength);
 			var y = Mathf.Repeat(Time.time * m_offsetSpeed.y, k_maxLength);
 			var offset = new Vector2(x, y);

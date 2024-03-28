@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 敵制御
+/// </summary>
 public class ViranController : MonoBehaviour
 {
     float speed;
@@ -18,6 +21,7 @@ public class ViranController : MonoBehaviour
 
     public void Start()
     {
+        //ステータス取得
         speed = status.Speed;
         shots = status.Shots;
         angle = status.Angle;
@@ -29,9 +33,12 @@ public class ViranController : MonoBehaviour
 
     public void Update()
     {
+        //移動
         this.transform.localPosition += new Vector3(0, -speed * Time.deltaTime, 0);
 
         bulletTime += Time.deltaTime;
+
+        //一定時間毎に弾を生成する
         if(bulletTime >= coolTime) {
             Transform ViranPos = this.GetComponent<Transform>();
             Vector3 bulletPos = ViranPos.localPosition;
@@ -49,10 +56,13 @@ public class ViranController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //プレイヤーの弾にぶつかったら
         if(collision.gameObject.tag == "Bullet")
         {
+            //爆破演出生成
             Instantiate(particleObject, this.transform.localPosition, Quaternion.identity);
             MainManager.GetComponent<GameManager>().Kill();
+
             Destroy(gameObject);
         }
     }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// ƒŠƒUƒ‹ƒg‰æ–Ê
+/// </summary>
 public class ResultController : MonoBehaviour
 {
     [SerializeField] Text HP;
@@ -16,12 +19,15 @@ public class ResultController : MonoBehaviour
     [SerializeField] Text Score;
     int score;
 
+    [SerializeField] int hpBonusNum = 100;
+    [SerializeField] int killBonusNum = 200;
+
     void Start()
     {
         hp = GameManager.hp;
         killScore = GameManager.killScore;
-        hpBonus = hp * 100;
-        killBonus = killScore * 200;
+        hpBonus = hp * hpBonusNum;
+        killBonus = killScore * killBonusNum;
         score = hpBonus + killBonus;
     }
 

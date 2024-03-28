@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+/// <summary>
+/// ボス制御
+/// </summary>
 public class BossController : MonoBehaviour
 {
     float speed;
@@ -35,14 +38,15 @@ public class BossController : MonoBehaviour
     public void Update() {
         this.transform.localPosition += new Vector3(0, -speed * Time.deltaTime, 0);
 
+        //ステータスをランダムで変更
         num = Random.Range(0, status.Length);
-
         speed = status[num].Speed;
         shots = status[num].Shots;
         angle = status[num].Angle;
         coolTime = status[num].CoolTime;
         correction = status[num].Correction;
 
+        //弾生成
         bulletTime += Time.deltaTime;
         if(bulletTime >= coolTime) {
             Transform ViranPos = this.GetComponent<Transform>();
@@ -57,6 +61,7 @@ public class BossController : MonoBehaviour
             bulletTime = 0f;
         }
 
+        //ボス討伐
         if(hitCount >= 10) {
             for (int i = 0; i <= 1; i++) {
                 Instantiate(particleObject, this.transform.localPosition, Quaternion.identity);

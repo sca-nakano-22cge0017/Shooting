@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 敵ステータス
+/// </summary>
 [CreateAssetMenu(menuName = "Create CharacterStatus")]
 public class StatuaData : ScriptableObject
 {

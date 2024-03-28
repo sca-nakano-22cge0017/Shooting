@@ -4,11 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// メインゲーム制御
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     //プレイヤー
     public GameObject Player;
     [SerializeField] PlayerController playerController;
+
+    [SerializeField, Header("オブジェクト生成位置　Y座標")] float CreatePosY = 8;
 
     //障害物
     [SerializeField] GameObject[] Rock;
@@ -21,6 +26,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject Items;
     bool itemCreate;
     float itemPos;
+    [SerializeField] float itemCrePosMin = -3;
+    [SerializeField] float itemCrePosMax = 3;
 
     //敵
     [SerializeField] GameObject[] Viran;
@@ -40,6 +47,7 @@ public class GameManager : MonoBehaviour
     //弾
     [SerializeField] GameObject Bullet;
     float bulletTime;
+    [SerializeField] float bulletsSpan = 0.5f;
 
     //HP
     [SerializeField] Image[] HP;
@@ -99,12 +107,11 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        KillScore.text = killScore + "";
+        KillScore.text = killScore.ToString();
 
         switch(state)
         {
             case STATE.WAIT:
-                WAIT();
                 break;
             case STATE.PLAY:
                 PLAY();
@@ -118,10 +125,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void WAIT()
-    {
-    }
-
     void PLAY()
     {
         //岩の生成
@@ -129,8 +132,9 @@ public class GameManager : MonoBehaviour
         {
             num = Random.Range(0, Rock.Length);
             rockPos = Random.Range(minRockPos, maxRockPos);
-            GameObject inst = Instantiate(Rock[num], new Vector3(rockPos, 8, 0), Quaternion.identity);
-            inst.layer = LayerMask.NameToLayer("Default");
+
+            Instantiate(Rock[num], new Vector3(rockPos, CreatePosY, 0), Quaternion.identity);
+
             rockCreate = false;
             StartCoroutine("RockCoolTime");
         }
@@ -141,26 +145,28 @@ public class GameManager : MonoBehaviour
             viranPos = Random.Range(minViranPos, maxViranPos);
             probability = Random.Range(1, 100);
 
+            //probabilityの数値によって生成する敵を変える
             if(probability <= threeDirection) { viranNum = 0; }
             else if (probability > threeDirection && probability <= twoDirection) { viranNum = 1; }
             else if(probability > twoDirection && probability <= highSpeed) { viranNum = 2; } 
 
-            Instantiate(Viran[viranNum], new Vector3(viranPos, 8, 0), Quaternion.identity);
+            Instantiate(Viran[viranNum], new Vector3(viranPos, CreatePosY, 0), Quaternion.identity);
             viranCreate = false;
             StartCoroutine("ViranCoolTime");
         }
 
         //回復アイテム生成
         if(itemCreate && hp < 3) {
-            itemPos = Random.Range(-3, 3);
-            Instantiate(Items, new Vector3(itemPos, 8, 0), Quaternion.identity);
+            
+            itemPos = Random.Range(itemCrePosMin, itemCrePosMax);
+            Instantiate(Items, new Vector3(itemPos, CreatePosY, 0), Quaternion.identity);
             itemCreate = false;
             StartCoroutine("ItemCoolTime");
         }
 
         //弾の生成
         bulletTime += Time.deltaTime;
-        if (bulletTime >= 0.5f)
+        if (bulletTime >= bulletsSpan) //一定間隔で弾を生成
         {
             Transform playerPos = Player.GetComponent<Transform>();
             Vector3 bulletPos = playerPos.position;
@@ -199,7 +205,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine("GameOver");
         }
 
-        //ボス判定
+        //ボス判定 一定時間経ったらボス戦突入
         time += Time.deltaTime;
         if(time >= playTime) {
             isBoss = true;
@@ -207,33 +213,47 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ボス戦制御
+    /// </summary>
     void BOSS() {
         boss.SetActive(true);
         bossHPBar.SetActive(true);
         
+        //ボス登場
         if(boss.transform.localPosition.y >= 0.5f) {
             boss.transform.localPosition += new Vector3(0, -2.2f, 0) * Time.deltaTime;
         }
+        //ボスHP表示
         if(bossHPBar.transform.localPosition.y >= 250) {
             bossHPBar.transform.localPosition += new Vector3(0, -150, 0) * Time.deltaTime;
         }
         
+        //ボスダメージ処理
         if(bossDamage) {
             bossHP.fillAmount -= 0.1f;
             bossDamage = false;
         }
+
+        //ボスのHPが0になったらクリア
         if(bossHP.fillAmount <= 0) {
             bossHPBar.SetActive(false);
             state = STATE.CLEAR;
         }
     }
 
+    float goalSpeed = 300;
+
+    /// <summary>
+    /// クリア制御
+    /// </summary>
     void CLEAR()
     {
-        Goal.enabled = true;
+        Goal.enabled = true; //ゴール表示
+
         if(Goal.transform.position.y >= 600)
         {
-            Goal.transform.position -= new Vector3(0, 300 * Time.deltaTime, 0);
+            Goal.transform.position -= new Vector3(0, goalSpeed * Time.deltaTime, 0);
         }
         else if(Goal.transform.position.y <= 600) {
             playerController.Clear();
@@ -251,26 +271,42 @@ public class GameManager : MonoBehaviour
         bossHPBar.SetActive(false);
     }
 
+    /// <summary>
+    /// HP減少
+    /// </summary>
     public void MinusHp() {
         minusHp = true;
     }
 
+    /// <summary>
+    /// HP増加
+    /// </summary>
     public void PlusHp() {
         plusHp = true;
     }
 
+    /// <summary>
+    /// ボスHP減少
+    /// </summary>
     public void BossMinusHP() {
         bossDamage = true;
     }
 
+    /// <summary>
+    /// 雑魚敵討伐
+    /// </summary>
     public void Kill() {
         kill = true;
     }
 
+    /// <summary>
+    /// クリア
+    /// </summary>
     public void Clear() {
         clear = true;
     }
 
+    //生成クールタイム
     IEnumerator RockCoolTime()
     {
         yield return new WaitForSeconds(2);
@@ -288,6 +324,9 @@ public class GameManager : MonoBehaviour
         itemCreate = true;
     }
 
+    /// <summary>
+    /// カウントダウン
+    /// </summary>
     IEnumerator CountDown()
     {
         for (int i = 3; i > 0; i--)
@@ -296,18 +335,28 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(1);
         }
         countDown.text = "START!!";
+
         yield return new WaitForSeconds(1);
+
         countDown.enabled = false;
+
+        //ゲーム開始
         state = STATE.PLAY;
         playerController.Play();
     }
 
+    /// <summary>
+    /// シーン遷移
+    /// </summary>
     IEnumerator SceneChange() {
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene("ResultScene");
         sceneChange = false;
     }
 
+    /// <summary>
+    /// ゲームオーバー時のシーン遷移
+    /// </summary>
     IEnumerator GameOver() {
         yield return new WaitForSeconds(3);
         SceneManager.LoadScene("TitleScene");

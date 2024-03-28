@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// ä‚Å@êßå‰
+/// </summary>
 public class RockController : MonoBehaviour
 {
     float transformSpeed, rotateSpeed;
+    float desPos = -7f;
 
     void Start()
     {
@@ -24,7 +28,8 @@ public class RockController : MonoBehaviour
         //âÒì]à⁄ìÆ
         myTransform.Rotate(0, 0, rotateSpeed * Time.deltaTime, Space.World);
 
-        if(pos.y <= -7) {
+        //âÊñ äOÇ≈çÌèú
+        if(pos.y <= desPos) {
             Destroy(gameObject);
         }
     }
