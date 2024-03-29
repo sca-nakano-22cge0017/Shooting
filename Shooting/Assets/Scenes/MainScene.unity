@@ -838,6 +838,8 @@ MonoBehaviour:
   particleObject: {fileID: 8318813707127669681, guid: 6a73a720c2daa69418706a4c5416329f, type: 3}
   status:
   - {fileID: 11400000, guid: 55ee71ea6bf27c841ad27f6d353448d0, type: 2}
+  - {fileID: 11400000, guid: 49b862af7b1b81740b11d5f54055b372, type: 2}
+  - {fileID: 11400000, guid: 7e15d02c6daba864e83802c5286c22dc, type: 2}
   - {fileID: 11400000, guid: 1bd77baf8eef9be4db238f21b291d6ba, type: 2}
 --- !u!1 &1112049391
 GameObject:
@@ -1804,8 +1806,8 @@ MonoBehaviour:
   maxViranPos: 3.5
   minViranPos: -3.5
   threeDirection: 40
-  twoDirection: 40
-  highSpeed: 20
+  twoDirection: 70
+  highSpeed: 100
   boss: {fileID: 1054731516}
   bossHPBar: {fileID: 376129585}
   bossHP: {fileID: 2117781900}
@@ -1817,7 +1819,7 @@ MonoBehaviour:
   - {fileID: 1112049393}
   countDown: {fileID: 789824308}
   Goal: {fileID: 2133248693}
-  playTime: 60
+  playTime: 30
   GameOverText: {fileID: 1562176561}
   KillScore: {fileID: 534134041}
 --- !u!4 &1969097874
