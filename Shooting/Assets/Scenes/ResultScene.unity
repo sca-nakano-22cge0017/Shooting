@@ -554,7 +554,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_UiScaleMode: 1
-  m_ReferencePixelsPerUnit: 100
+  m_ReferencePixelsPerUnit: 0
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 900, y: 1200}
   m_ScreenMatchMode: 0
@@ -1417,6 +1417,8 @@ MonoBehaviour:
   HPBonus: {fileID: 350230505}
   KillBonus: {fileID: 1143093779}
   Score: {fileID: 2027846629}
+  hpBonusNum: 100
+  killBonusNum: 200
 --- !u!4 &1253264894
 Transform:
   m_ObjectHideFlags: 0
